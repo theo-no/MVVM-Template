@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MVVMTemplate</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_home_fragment">home fragment</string>
+    <string name="title_second_fragment">second fragment</string>
+
 </resources>

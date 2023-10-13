@@ -25,9 +25,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
     override fun initListener() {
         binding.apply {
             buttonMoveSecondFragment.setOnClickListener {
-                Log.d(TAG, "moveSecondFragme click... ")
                 findNavController().navigate(
-                    R.id.action_homeFragment_to_secondFragment
+                    R.id.action_homeFragment_to_thirdFragment
                 )
             }
         }

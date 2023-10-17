@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
 
 plugins {
     id("com.android.application")
@@ -58,7 +57,6 @@ dependencies {
     var hilt_version = "1.0.0"
     implementation("com.google.dagger:hilt-android:$dagger_version")
     kapt("com.google.dagger:hilt-android-compiler:$dagger_version")
-    implementation("androidx.hilt:hilt-navigation-compose:$hilt_version")
 
     //navigataion
     // Jetpack Navigation Kotlin
@@ -74,4 +72,11 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
+    implementation("androidx.activity:activity-ktx:1.7.2")
+    //framework ktx
+    implementation("androidx.fragment:fragment-ktx:1.6.0")
+
 }

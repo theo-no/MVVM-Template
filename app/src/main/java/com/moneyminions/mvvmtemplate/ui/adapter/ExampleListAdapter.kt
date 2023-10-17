@@ -1,4 +1,4 @@
-package com.moneyminions.mvvmtemplate.ui
+package com.moneyminions.mvvmtemplate.ui.adapter
 
 import android.util.Log
 import android.view.LayoutInflater

@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.moneyminions.mvvmtemplate.R
 import com.moneyminions.mvvmtemplate.base.BaseFragment
 import com.moneyminions.mvvmtemplate.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 private const val TAG = "차선호"
 class HomeFragment : BaseFragment<FragmentHomeBinding>(

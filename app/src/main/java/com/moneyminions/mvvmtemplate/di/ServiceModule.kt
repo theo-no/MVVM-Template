@@ -24,7 +24,7 @@ object ServiceModule {
     @Singleton
     @Provides
     @Named("BASE_URL")
-    fun BaseUrl() : String = "ddd"
+    fun BaseUrl() : String = "https://api.github.com"
 
     @Singleton
     @Provides

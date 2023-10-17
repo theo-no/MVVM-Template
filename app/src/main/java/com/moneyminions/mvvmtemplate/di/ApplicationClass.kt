@@ -2,7 +2,9 @@ package com.moneyminions.mvvmtemplate.di
 
 import android.app.Application
 import com.moneyminions.mvvmtemplate.util.SharedPreferenceUtil
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class ApplicationClass: Application() {
 
     // 코틀린의 전역변수

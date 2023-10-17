@@ -3,7 +3,7 @@
     <item android:id="@+id/homeFragment"
         android:title="home"
         android:icon="@drawable/baseline_home_24"/>
-    <item android:id="@+id/secondFragment"
+    <item android:id="@+id/githubFragment"
         android:title="second"
         android:icon="@drawable/baseline_menu_24"/>
 </menu>

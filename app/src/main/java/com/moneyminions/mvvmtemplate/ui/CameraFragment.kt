@@ -34,6 +34,11 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
     private val cameraViewModel: CameraViewModel by viewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkCameraPermission()
+        initListener()
+    }
+
+    private fun checkCameraPermission(){
         checkOnePermission(
             fragment = this,
             activity = mActivity,
@@ -45,9 +50,12 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
             setIsShowedPermissionDialog = {mainViewModel.setIsShowedPermissionDialog(
                 CAMERA_PERMISSION_REJECTED+"show")}
         )
-        initListener()
     }
 
+    private fun openCamerOrGalleryDialog(){
+        val cameraOrGalleryDialog = CameraOrGalleryBottomSheet()
+        cameraOrGalleryDialog.show(childFragmentManager,null)
+    }
 
     override fun initListener() {
         binding.apply {
@@ -57,6 +65,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
                     return@setOnClickListener
                 }else{
                     //TODO 카메라 키는 로직 추가
+                    openCamerOrGalleryDialog()
                 }
             }
         }

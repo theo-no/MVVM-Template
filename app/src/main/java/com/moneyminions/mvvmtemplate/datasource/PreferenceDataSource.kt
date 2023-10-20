@@ -6,6 +6,6 @@ interface PreferenceDataSource {
     fun getRefreshToken(): String?
     fun setRefreshToken(newToken: String)
     fun resetToken()
-    fun setCameraPermissionRejected(value: Boolean)
-    fun getCameraPermissionRejected(): Boolean
+    fun setPermissionRejected(key: String, value: Boolean)
+    fun getPermissionRejected(key: String): Boolean
 }

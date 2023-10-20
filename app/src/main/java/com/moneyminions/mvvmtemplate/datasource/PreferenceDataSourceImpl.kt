@@ -15,7 +15,6 @@ class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
         private const val X_ROLE = "role"
         private const val FCM_TOKEN = "fcm_token"
         private const val ROOM_ID = "room_id"
-        private const val CAMERA_PERMISSION_REJECTED = "camera_permission_rejected"
     }
     private fun getPreference(context: Context): SharedPreferences {
         val masterKey = MasterKey.Builder(context)
@@ -69,11 +68,11 @@ class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
         TODO("Not yet implemented")
     }
 
-    override fun setCameraPermissionRejected(value: Boolean) {
-        putBoolean(CAMERA_PERMISSION_REJECTED, value)
+    override fun setPermissionRejected(key: String, value: Boolean) {
+        putBoolean(key, value)
     }
 
-    override fun getCameraPermissionRejected(): Boolean {
-        return getBoolean(CAMERA_PERMISSION_REJECTED)
+    override fun getPermissionRejected(key: String): Boolean {
+        return getBoolean(key)
     }
 }

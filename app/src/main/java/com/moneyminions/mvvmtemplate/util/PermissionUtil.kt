@@ -11,13 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.moneyminions.mvvmtemplate.MainActivity
+import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.CAMERA_PERMISSION_REJECTED
 import java.security.Permission
 
 private const val TAG = "차선호"
-fun Context.hasCameraPermissions(): Boolean{
+fun Context.hasCameraPermissions(permission: String): Boolean{
     return ContextCompat.checkSelfPermission(
         this,
-        android.Manifest.permission.CAMERA
+        permission
     ) == PackageManager.PERMISSION_GRANTED
 }
 
@@ -27,27 +28,51 @@ data class PermissionWithName(
 )
 
 
-private const val CAMERA_PERMISSION_REJECTED = "camera_permission_rejected"
 
 val permissionList = arrayOf(
-    PermissionWithName(permission = android.Manifest.permission.CAMERA, name = CAMERA_PERMISSION_REJECTED)
-
+    CAMERA_PERMISSION_REJECTED
 )
 
-
-fun checkCameraPermission(
-    fragment: Fragment,
+fun checkAllPermission(
     activity: MainActivity,
-    getCameraPermissionRejected: Boolean,
-    setCameraPermissionRejected: () -> Unit
+    getPermissionRejected: Boolean,
+    setPermissionRejected: () -> Unit
 ){
-    if(activity.hasCameraPermissions()) return
-    val requestMultiplePermission = fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+    for(permission in permissionList) {
+        if (activity.hasCameraPermissions(permission)) return
+        val requestMultiplePermission =
+            activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+                results.forEach {
+                    if (!it.value) {
+                        if (!getPermissionRejected) {
+                            setPermissionRejected()
+                        } else {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri = Uri.fromParts("package", activity.packageName, null)
+                            intent.data = uri
+                            activity.startActivity(intent)
+                        }
+                    }
+                }
+            }
+        requestMultiplePermission.launch(arrayOf(permission))
+    }
+}
+
+
+fun checkOnePermission(
+    fragment: Fragment?,
+    activity: MainActivity,
+    permission: String,
+    getPermissionRejected: Boolean,
+    setPermissionRejected: () -> Unit
+){
+    if(activity.hasCameraPermissions(permission)) return
+    val requestMultiplePermission = (fragment?:activity).registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
         results.forEach {
             if(!it.value) {
-                Log.d(TAG, "checkCameraPermission 내에서 : $getCameraPermissionRejected ")
-                if(!getCameraPermissionRejected){
-                    setCameraPermissionRejected()
+                if(!getPermissionRejected){
+                    setPermissionRejected()
                 }else{
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     val uri = Uri.fromParts("package", activity.packageName, null)
@@ -57,6 +82,6 @@ fun checkCameraPermission(
             }
         }
     }
-    requestMultiplePermission.launch(arrayOf(android.Manifest.permission.CAMERA))
+    requestMultiplePermission.launch(arrayOf(permission))
 
 }

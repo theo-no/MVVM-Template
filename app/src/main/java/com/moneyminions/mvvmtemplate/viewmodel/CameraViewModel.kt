@@ -18,15 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CameraViewModel @Inject constructor(
-    private val preferenceDataSource: PreferenceDataSource
 ): ViewModel() {
-
-    fun getCameraPermissionRejected(): Boolean{
-        return preferenceDataSource.getCameraPermissionRejected()
-    }
-
-    fun setCameraPermissionRejected(){
-        preferenceDataSource.setCameraPermissionRejected(true)
-    }
 
 }

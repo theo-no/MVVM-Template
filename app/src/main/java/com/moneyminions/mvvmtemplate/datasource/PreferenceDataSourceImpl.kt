@@ -2,9 +2,11 @@ package com.moneyminions.mvvmtemplate.datasource
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
+private const val TAG = "차선호"
 class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
     companion object{
         private const val AUTH_ENCRYPTED_PREFERENCE = "mvvm_template"
@@ -13,6 +15,7 @@ class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
         private const val X_ROLE = "role"
         private const val FCM_TOKEN = "fcm_token"
         private const val ROOM_ID = "room_id"
+        private const val CAMERA_PERMISSION_REJECTED = "camera_permission_rejected"
     }
     private fun getPreference(context: Context): SharedPreferences {
         val masterKey = MasterKey.Builder(context)
@@ -36,6 +39,16 @@ class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
     private fun getString(key: String, defValue: String? = null): String? {
         return prefs.getString(key, defValue)
     }
+
+    private fun putBoolean(key: String, value: Boolean){
+        editor.putBoolean(key, value)
+        editor.apply()
+    }
+
+    private fun getBoolean(key: String): Boolean {
+        return prefs.getBoolean(key, false)
+    }
+
     override fun getAccessToken(): String? {
         return getString(X_ACCESS_TOKEN)
     }
@@ -54,5 +67,13 @@ class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
 
     override fun resetToken() {
         TODO("Not yet implemented")
+    }
+
+    override fun setCameraPermissionRejected(value: Boolean) {
+        putBoolean(CAMERA_PERMISSION_REJECTED, value)
+    }
+
+    override fun getCameraPermissionRejected(): Boolean {
+        return getBoolean(CAMERA_PERMISSION_REJECTED)
     }
 }

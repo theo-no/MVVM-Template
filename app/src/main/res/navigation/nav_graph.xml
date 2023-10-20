@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_preferenceFragment"
             app:destination="@id/preferenceFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
     </fragment>
     <fragment
         android:id="@+id/githubFragment"
@@ -32,4 +35,9 @@
         android:name="com.moneyminions.mvvmtemplate.ui.PreferenceFragment"
         android:label="fragment_preference"
         tools:layout="@layout/fragment_preference" />
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.moneyminions.mvvmtemplate.ui.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" />
 </navigation>

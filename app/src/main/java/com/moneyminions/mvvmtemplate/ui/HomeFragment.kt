@@ -38,6 +38,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
                     R.id.action_homeFragment_to_preferenceFragment
                 )
             }
+            buttonMoveCameraFragment.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_homeFragment_to_cameraFragment
+                )
+            }
         }
     }
 

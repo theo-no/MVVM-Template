@@ -10,7 +10,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.moneyminions.mvvmtemplate.base.BaseActivity
 import com.moneyminions.mvvmtemplate.databinding.ActivityMainBinding
 import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.PERMISSION_LIST
-import com.moneyminions.mvvmtemplate.util.checkAllPermission
 import com.moneyminions.mvvmtemplate.util.checkOnePermission
 import com.moneyminions.mvvmtemplate.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +37,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 activity = this,
                 permission = permission,
                 getPermissionRejected = mainViewModel.getPermissionRejected(permission),
-                setPermissionRejected = {mainViewModel.setPermissionRejected(permission)}
+                setPermissionRejected = {mainViewModel.setPermissionRejected(permission)},
+                getIsShowedPermissionDialog = mainViewModel.getIsShowedPermissionDialog(permission+"show"),
+                setIsShowedPermissionDialog = {mainViewModel.setIsShowedPermissionDialog(permission+"show")}
             )
         }
     }

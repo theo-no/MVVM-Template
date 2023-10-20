@@ -75,4 +75,12 @@ class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
     override fun getPermissionRejected(key: String): Boolean {
         return getBoolean(key)
     }
+
+    override fun setIsShowedPermissionDialog(key: String, value: Boolean) {
+        putBoolean(key, value)
+    }
+
+    override fun getIsShowedPermissionDialog(key: String): Boolean {
+        return getBoolean(key)
+    }
 }

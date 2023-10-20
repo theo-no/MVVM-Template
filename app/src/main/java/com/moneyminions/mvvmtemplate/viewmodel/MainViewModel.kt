@@ -18,4 +18,12 @@ class MainViewModel @Inject constructor(
     fun setPermissionRejected(key: String){
         preferenceDataSource.setPermissionRejected(key, true)
     }
+
+    fun getIsShowedPermissionDialog(key: String): Boolean{
+        return preferenceDataSource.getIsShowedPermissionDialog(key)
+    }
+
+    fun setIsShowedPermissionDialog(key:String){
+        preferenceDataSource.setIsShowedPermissionDialog(key, true)
+    }
 }

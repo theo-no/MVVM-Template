@@ -18,7 +18,7 @@ import com.moneyminions.mvvmtemplate.base.BaseFragment
 import com.moneyminions.mvvmtemplate.databinding.FragmentCameraBinding
 import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.CAMERA_PERMISSION_REJECTED
 import com.moneyminions.mvvmtemplate.util.checkOnePermission
-import com.moneyminions.mvvmtemplate.util.hasCameraPermissions
+import com.moneyminions.mvvmtemplate.util.hasPermissions
 import com.moneyminions.mvvmtemplate.viewmodel.CameraViewModel
 import com.moneyminions.mvvmtemplate.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,17 +39,25 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
             activity = mActivity,
             permission = CAMERA_PERMISSION_REJECTED,
             getPermissionRejected = mainViewModel.getPermissionRejected(CAMERA_PERMISSION_REJECTED),
-            setPermissionRejected = {mainViewModel.setPermissionRejected(CAMERA_PERMISSION_REJECTED)}
+            setPermissionRejected = {mainViewModel.setPermissionRejected(CAMERA_PERMISSION_REJECTED)},
+            getIsShowedPermissionDialog = mainViewModel.getIsShowedPermissionDialog(
+                CAMERA_PERMISSION_REJECTED+"show"),
+            setIsShowedPermissionDialog = {mainViewModel.setIsShowedPermissionDialog(
+                CAMERA_PERMISSION_REJECTED+"show")}
         )
         initListener()
     }
 
 
-
     override fun initListener() {
         binding.apply {
             buttonCamera.setOnClickListener {
-
+                if(!mActivity.hasPermissions(CAMERA_PERMISSION_REJECTED)){
+                    mActivity.showToast("설정에서 카메라 권한을 허용해주세요")
+                    return@setOnClickListener
+                }else{
+                    //TODO 카메라 키는 로직 추가
+                }
             }
         }
     }

@@ -8,4 +8,6 @@ interface PreferenceDataSource {
     fun resetToken()
     fun setPermissionRejected(key: String, value: Boolean)
     fun getPermissionRejected(key: String): Boolean
+    fun setIsShowedPermissionDialog(key: String, value: Boolean)
+    fun getIsShowedPermissionDialog(key: String): Boolean
 }

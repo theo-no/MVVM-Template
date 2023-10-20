@@ -8,7 +8,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.moneyminions.mvvmtemplate.base.BaseActivity
 import com.moneyminions.mvvmtemplate.databinding.ActivityMainBinding
-import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.sharedPreferences
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -6,32 +6,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/title_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_home_fragment"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
     <Button
-        android:id="@+id/button_move_second_fragment"
+        android:id="@+id/button_move_recyclerview_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="second fragment로 이동"
-        app:layout_constraintTop_toBottomOf="@id/title_home"
+        android:text="recyclerview fragment로 이동"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"/>
 
-    <TextView
+    <Button
+        android:id="@+id/button_move_preference_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="preference fragment로 이동"
+        app:layout_constraintTop_toBottomOf="@id/button_move_recyclerview_fragment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

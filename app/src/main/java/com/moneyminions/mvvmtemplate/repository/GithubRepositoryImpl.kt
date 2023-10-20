@@ -10,11 +10,11 @@ import javax.inject.Inject
 class GithubRepositoryImpl @Inject constructor(
     private val businessService: BusinessService
 ): GithubRepository {
-    override suspend fun getUserRepos(user: String): NetworkResult<List<RepoResponse>> {
+    override suspend fun getUserRepos(user: String): List<RepoResponse> {
         return handleApi { businessService.getUserRepos(user) }
     }
 
-    override suspend fun getRepoInfo(user: String, repo: String): NetworkResult<RepoInfoResponse> {
+    override suspend fun getRepoInfo(user: String, repo: String): RepoInfoResponse {
         return handleApi { businessService.getRepoInfo(user, repo) }
     }
 }

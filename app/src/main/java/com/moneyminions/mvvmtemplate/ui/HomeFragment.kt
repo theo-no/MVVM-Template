@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.moneyminions.mvvmtemplate.R
 import com.moneyminions.mvvmtemplate.base.BaseFragment
 import com.moneyminions.mvvmtemplate.databinding.FragmentHomeBinding
+import com.moneyminions.mvvmtemplate.util.NavigationUtil
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -21,14 +22,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        NavigationUtil.showBottomNavigation(mActivity.bottomNavigationView)
         initListener()
     }
 
     override fun initListener() {
         binding.apply {
-            buttonMoveSecondFragment.setOnClickListener {
+            buttonMoveRecyclerviewFragment.setOnClickListener {
                 findNavController().navigate(
                     R.id.action_homeFragment_to_thirdFragment
+                )
+            }
+            buttonMovePreferenceFragment.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_homeFragment_to_preferenceFragment
                 )
             }
         }

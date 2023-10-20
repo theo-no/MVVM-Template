@@ -6,16 +6,15 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.moneyminions.mvvmtemplate.R
 import com.moneyminions.mvvmtemplate.base.BaseFragment
-import com.moneyminions.mvvmtemplate.databinding.FragmentThirdBinding
+import com.moneyminions.mvvmtemplate.databinding.FragmentRecyclerviewBinding
 import com.moneyminions.mvvmtemplate.dto.UserDto
 import com.moneyminions.mvvmtemplate.ui.adapter.ExampleListAdapter
 import com.moneyminions.mvvmtemplate.util.NavigationUtil
-import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "차선호"
-class ThirdFragment : BaseFragment<FragmentThirdBinding>(
-    FragmentThirdBinding::bind,
-    R.layout.fragment_third
+class RecyclerviewFragment : BaseFragment<FragmentRecyclerviewBinding>(
+    FragmentRecyclerviewBinding::bind,
+    R.layout.fragment_recyclerview
 ) {
     val userList = listOf<UserDto>(
         UserDto(0,"아이유",27,"https://cdnimg.melon.co.kr/cm2/artistcrop/images/002/61/143/261143_20210325180240_org.jpg?61e575e8653e5920470a38d1482d7312/melon/optimize/90"),

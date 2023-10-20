@@ -74,6 +74,11 @@ class GithubFragment : BaseFragment<FragmentGithubBinding>(
                 repoListAdapter.submitList(it)
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            githubViewModel.error.collectLatest {
+                mActivity.showToast(it.message.toString())
+            }
+        }
     }
 
 }

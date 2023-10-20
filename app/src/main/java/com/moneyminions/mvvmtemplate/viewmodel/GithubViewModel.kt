@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.color.utilities.MaterialDynamicColors.onError
 import com.moneyminions.mvvmtemplate.dto.RepoResponse
 import com.moneyminions.mvvmtemplate.repository.GithubRepository
+import com.moneyminions.mvvmtemplate.util.NetworkThrowable
 import com.moneyminions.mvvmtemplate.util.onError
 import com.moneyminions.mvvmtemplate.util.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,15 +31,22 @@ class GithubViewModel @Inject constructor(
     private var _repoList = MutableSharedFlow<List<RepoResponse>>()
     val repoList: SharedFlow<List<RepoResponse>>
         get() = _repoList.asSharedFlow()
+
+    private val _error = MutableSharedFlow<NetworkThrowable>()
+    var error = _error.asSharedFlow()
+
     fun getUserRepos(){
         viewModelScope.launch {
-            githubRepository.getUserRepos(_userId).apply {
-                onSuccess {
-                    Log.d(TAG, "getUserRepos success : $it")
-                    _repoList.emit(it)
-                }
-                onError {
-                    Log.d(TAG, "getUserRepos error : $it")
+            kotlin.runCatching {
+                githubRepository.getUserRepos(_userId)
+            }.onSuccess {
+                Log.d(TAG, "getUserRepos success : $it")
+                _repoList.emit(it)
+            }.onFailure {
+                if (it is NetworkThrowable) {
+                    _error.emit(it)
+                } else {
+                    _error.emit(NetworkThrowable.NetworkErrorThrowable())
                 }
             }
         }

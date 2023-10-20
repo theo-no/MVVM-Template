@@ -79,4 +79,7 @@ dependencies {
     //framework ktx
     implementation("androidx.fragment:fragment-ktx:1.6.0")
 
+    // EncryptedSharedPreferences
+    implementation ("androidx.security:security-crypto-ktx:1.1.0-alpha03")
+
 }

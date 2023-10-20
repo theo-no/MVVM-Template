@@ -35,7 +35,7 @@ abstract class BaseActivity<B : ViewBinding>(private val inflate: (LayoutInflate
 //    }
 
     // 토스트를 쉽게 띄울 수 있게 해줌.
-    fun showCustomToast(message: String) {
+    fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

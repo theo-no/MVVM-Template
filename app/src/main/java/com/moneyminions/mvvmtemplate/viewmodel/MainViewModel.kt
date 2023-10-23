@@ -36,10 +36,6 @@ class MainViewModel @Inject constructor(
     fun setIsShowedPermissionDialog(key:String){
         preferenceDataSource.setIsShowedPermissionDialog(key, true)
     }
-
-    fun getIsAlreadyShowedDialog(): Boolean{
-        return preferenceDataSource.getIsAlreadyShowedDialog()
-    }
     fun setIsAlreadyShowedDialog(value: Boolean){
         preferenceDataSource.setIsAlreadyShowedDialog(value)
     }

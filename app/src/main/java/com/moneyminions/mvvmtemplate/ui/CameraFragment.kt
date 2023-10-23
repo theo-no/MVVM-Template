@@ -24,7 +24,6 @@ import com.moneyminions.mvvmtemplate.R
 import com.moneyminions.mvvmtemplate.base.BaseFragment
 import com.moneyminions.mvvmtemplate.databinding.FragmentCameraBinding
 import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.CAMERA_PERMISSION_REJECTED
-import com.moneyminions.mvvmtemplate.util.checkOnePermission
 import com.moneyminions.mvvmtemplate.util.hasPermissions
 import com.moneyminions.mvvmtemplate.viewmodel.CameraViewModel
 import com.moneyminions.mvvmtemplate.viewmodel.MainViewModel

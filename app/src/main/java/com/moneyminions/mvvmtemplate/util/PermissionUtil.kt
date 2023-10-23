@@ -12,8 +12,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.moneyminions.mvvmtemplate.MainActivity
-import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.CAMERA_PERMISSION_REJECTED
-import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.PERMISSION_LIST
 import java.security.Permission
 
 private const val TAG = "차선호"
@@ -27,62 +25,36 @@ fun Context.hasPermissions(permission: String): Boolean{
 fun checkAllPermission(
     fragment: Fragment?,
     activity: MainActivity,
+    permissionList: Array<String>,
     getPermissionRejected: (String) -> Boolean,
     setPermissionRejected: (String) -> Unit,
     getIsShowedPermissionDialog: (String) -> Boolean,
-    setIsShowedPermissionDialog: (String) -> Unit
+    setIsShowedPermissionDialog: (String) -> Unit,
+    isShowDialog: () -> Unit
 ){
     val requestMultiplePermission =
         (fragment?:activity).registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+            var lastResult = false // 초기값을 false 설정
             results.forEach {
-                Log.d(TAG, "checkAllPermission... ${it.key}")
                 if(!it.value) {
                     if(!getPermissionRejected(it.key)){
                         setPermissionRejected(it.key)
                     }else{
                         if(!getIsShowedPermissionDialog(it.key)) {
                             setIsShowedPermissionDialog(it.key)
-                            showPermissionDialog(activity)
+                            Log.d(TAG, "lastResult.... ${it.key}")
+                            lastResult = true
+                            }
                         }
                     }
                 }
-            }
-        }
-    requestMultiplePermission.launch(PERMISSION_LIST)
-}
-
-
-fun checkOnePermission(
-    fragment: Fragment?,
-    activity: MainActivity,
-    permission: String,
-    getPermissionRejected: Boolean,
-    setPermissionRejected: () -> Unit,
-    getIsShowedPermissionDialog: Boolean,
-    setIsShowedPermissionDialog: () -> Unit
-){
-    if(activity.hasPermissions(permission)) return
-    val requestMultiplePermission = (fragment?:activity).registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
-        results.forEach {
-            if(!it.value) {
-                if(!getPermissionRejected){
-                    setPermissionRejected()
-                }else{
-                    if(!getIsShowedPermissionDialog) {
-                        //TODO 다이얼로그 띄우고 거기서 확인 누르면 설정으로 이동하도록
-//                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-//                        val uri = Uri.fromParts("package", activity.packageName, null)
-//                        intent.data = uri
-//                        activity.startActivity(intent)
-                        setIsShowedPermissionDialog()
-                        showPermissionDialog(activity)
-                    }
+                // 마지막 결과가 있는 경우에만 로그 출력
+                if(lastResult){
+                    //여기서 다이얼로그 띄우는 변수 갱신
+                    isShowDialog()
                 }
             }
-        }
-    }
-    requestMultiplePermission.launch(arrayOf(permission))
-
+        requestMultiplePermission.launch(permissionList)
 }
 
 // 다이얼로그를 띄우기 위한 함수

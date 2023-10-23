@@ -25,7 +25,7 @@ import com.moneyminions.mvvmtemplate.base.BaseBottomSheet
 import com.moneyminions.mvvmtemplate.databinding.BottomsheetCameraOrDialogBinding
 import com.moneyminions.mvvmtemplate.databinding.FragmentCameraBinding
 import com.moneyminions.mvvmtemplate.di.ApplicationClass
-import com.moneyminions.mvvmtemplate.util.checkOnePermission
+import com.moneyminions.mvvmtemplate.util.checkAllPermission
 import com.moneyminions.mvvmtemplate.util.hasPermissions
 import com.moneyminions.mvvmtemplate.viewmodel.CameraViewModel
 import com.moneyminions.mvvmtemplate.viewmodel.MainViewModel
@@ -41,15 +41,12 @@ class CameraOrGalleryBottomSheet(
     BottomsheetCameraOrDialogBinding::bind,
     R.layout.bottomsheet_camera_or_dialog
 ) {
-    private lateinit var file: File
-    private lateinit var currentPhotoPath: String
     private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initListener()
-//        checkCameraPermission()
-        checkGalleryPermission()
+        checkPermission()
     }
 
     private fun initListener(){
@@ -65,55 +62,50 @@ class CameraOrGalleryBottomSheet(
                 }
             }
             buttonGallery.setOnClickListener {
-                cameraViewModel.setIsSelectedGallery(true)
-                this@CameraOrGalleryBottomSheet.dismiss()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                    if(!mActivity.hasPermissions(ApplicationClass.IMAGE_PERMISSION_REJECTED)){
+                        mActivity.showToast("설정에서 사진/미디어 접근 권한을 허용해주세요")
+                        return@setOnClickListener
+                    }else{
+                        cameraViewModel.setIsSelectedGallery(true)
+                        this@CameraOrGalleryBottomSheet.dismiss()
+                    }
+                }else{
+                    if(!mActivity.hasPermissions(ApplicationClass.GALLERY_PERMISSION_REJECTED)){
+                        mActivity.showToast("설정에서 사진/미디어 접근 권한을 허용해주세요")
+                        return@setOnClickListener
+                    }else {
+                        cameraViewModel.setIsSelectedGallery(true)
+                        this@CameraOrGalleryBottomSheet.dismiss()
+                    }
+                }
             }
         }
     }
 
-    private fun checkCameraPermission(){
-        checkOnePermission(
+    private fun checkPermission(){
+        val cameraAndGalleryPermissionList: Array<String>
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            cameraAndGalleryPermissionList = arrayOf(
+                ApplicationClass.CAMERA_PERMISSION_REJECTED,
+                ApplicationClass.IMAGE_PERMISSION_REJECTED
+            )
+        }else{
+            cameraAndGalleryPermissionList = arrayOf(
+                ApplicationClass.CAMERA_PERMISSION_REJECTED,
+                ApplicationClass.GALLERY_PERMISSION_REJECTED
+            )
+        }
+        checkAllPermission(
             fragment = this,
             activity = mActivity,
-            permission = ApplicationClass.CAMERA_PERMISSION_REJECTED,
-            getPermissionRejected = mainViewModel.getPermissionRejected(ApplicationClass.CAMERA_PERMISSION_REJECTED),
-            setPermissionRejected = {mainViewModel.setPermissionRejected(ApplicationClass.CAMERA_PERMISSION_REJECTED)},
-            getIsShowedPermissionDialog = mainViewModel.getIsShowedPermissionDialog(
-                ApplicationClass.CAMERA_PERMISSION_REJECTED +"show"),
-            setIsShowedPermissionDialog = {mainViewModel.setIsShowedPermissionDialog(
-                ApplicationClass.CAMERA_PERMISSION_REJECTED +"show")}
+            permissionList = cameraAndGalleryPermissionList,
+            getPermissionRejected = {it -> mainViewModel.getPermissionRejected(it)},
+            setPermissionRejected = {it -> mainViewModel.setPermissionRejected(it)},
+            getIsShowedPermissionDialog = {it -> mainViewModel.getIsShowedPermissionDialog(it+"show")},
+            setIsShowedPermissionDialog = {it -> mainViewModel.setIsShowedPermissionDialog(it+"show")},
+            isShowDialog = {if(!mainViewModel.isShowPermissionDialog.value) mainViewModel.setIsShowPermissionDialog(true)}
         )
     }
-
-    private fun checkGalleryPermission(){
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-            checkOnePermission(
-                fragment = this,
-                activity = mActivity,
-                permission = ApplicationClass.IMAGE_PERMISSION_REJECTED,
-                getPermissionRejected = mainViewModel.getPermissionRejected(ApplicationClass.IMAGE_PERMISSION_REJECTED),
-                setPermissionRejected = {mainViewModel.setPermissionRejected(ApplicationClass.IMAGE_PERMISSION_REJECTED)},
-                getIsShowedPermissionDialog = mainViewModel.getIsShowedPermissionDialog(
-                    ApplicationClass.IMAGE_PERMISSION_REJECTED +"show"),
-                setIsShowedPermissionDialog = {mainViewModel.setIsShowedPermissionDialog(
-                    ApplicationClass.IMAGE_PERMISSION_REJECTED +"show")}
-            )
-        }
-        else{
-            checkOnePermission(
-                fragment = this,
-                activity = mActivity,
-                permission = ApplicationClass.GALLERY_PERMISSION_REJECTED,
-                getPermissionRejected = mainViewModel.getPermissionRejected(ApplicationClass.GALLERY_PERMISSION_REJECTED),
-                setPermissionRejected = {mainViewModel.setPermissionRejected(ApplicationClass.GALLERY_PERMISSION_REJECTED)},
-                getIsShowedPermissionDialog = mainViewModel.getIsShowedPermissionDialog(
-                    ApplicationClass.GALLERY_PERMISSION_REJECTED +"show"),
-                setIsShowedPermissionDialog = {mainViewModel.setIsShowedPermissionDialog(
-                    ApplicationClass.GALLERY_PERMISSION_REJECTED +"show")}
-            )
-        }
-    }
-
 
 }

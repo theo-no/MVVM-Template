@@ -10,4 +10,6 @@ interface PreferenceDataSource {
     fun getPermissionRejected(key: String): Boolean
     fun setIsShowedPermissionDialog(key: String, value: Boolean)
     fun getIsShowedPermissionDialog(key: String): Boolean
+    fun getIsAlreadyShowedDialog(): Boolean
+    fun setIsAlreadyShowedDialog(value: Boolean)
 }

@@ -11,9 +11,12 @@ class ApplicationClass: Application() {
         const val CAMERA_PERMISSION_REJECTED = android.Manifest.permission.CAMERA
         const val GALLERY_PERMISSION_REJECTED = android.Manifest.permission.READ_EXTERNAL_STORAGE
         const val IMAGE_PERMISSION_REJECTED = android.Manifest.permission.READ_MEDIA_IMAGES
-        val PERMISSION_LIST = arrayOf(
+        val PERMISSION_LIST_UNDER32 = arrayOf(
             CAMERA_PERMISSION_REJECTED,
-            GALLERY_PERMISSION_REJECTED,
+            GALLERY_PERMISSION_REJECTED
+        )
+        val PERMISSION_LIST_UP33 = arrayOf(
+            CAMERA_PERMISSION_REJECTED,
             IMAGE_PERMISSION_REJECTED
         )
     }

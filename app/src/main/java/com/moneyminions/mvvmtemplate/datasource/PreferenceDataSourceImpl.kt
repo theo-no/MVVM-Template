@@ -15,6 +15,7 @@ class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
         private const val X_ROLE = "role"
         private const val FCM_TOKEN = "fcm_token"
         private const val ROOM_ID = "room_id"
+        private const val IS_SHOWED_PERMISSION_DIALOG = "is_showed_permission_dialog"
     }
     private fun getPreference(context: Context): SharedPreferences {
         val masterKey = MasterKey.Builder(context)
@@ -83,4 +84,14 @@ class PreferenceDataSourceImpl(context: Context): PreferenceDataSource {
     override fun getIsShowedPermissionDialog(key: String): Boolean {
         return getBoolean(key)
     }
+
+    override fun getIsAlreadyShowedDialog(): Boolean {
+        return getBoolean(IS_SHOWED_PERMISSION_DIALOG)
+    }
+
+    override fun setIsAlreadyShowedDialog(value: Boolean) {
+        putBoolean(IS_SHOWED_PERMISSION_DIALOG, value)
+    }
+
+
 }

@@ -23,17 +23,6 @@ fun Context.hasPermissions(permission: String): Boolean{
     ) == PackageManager.PERMISSION_GRANTED
 }
 
-data class PermissionWithName(
-    val permission: String,
-    val name: String
-)
-
-
-
-val permissionList = arrayOf(
-    CAMERA_PERMISSION_REJECTED
-)
-
 
 fun checkOnePermission(
     fragment: Fragment?,

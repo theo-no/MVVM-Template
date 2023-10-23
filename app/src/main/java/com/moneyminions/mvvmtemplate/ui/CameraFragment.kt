@@ -3,6 +3,7 @@ package com.moneyminions.mvvmtemplate.ui
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -16,6 +17,9 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.moneyminions.mvvmtemplate.R
 import com.moneyminions.mvvmtemplate.base.BaseFragment
 import com.moneyminions.mvvmtemplate.databinding.FragmentCameraBinding
@@ -44,24 +48,10 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
     private val cameraViewModel: CameraViewModel by viewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkCameraPermission()
         initListener()
         initCollect()
     }
 
-    private fun checkCameraPermission(){
-        checkOnePermission(
-            fragment = this,
-            activity = mActivity,
-            permission = CAMERA_PERMISSION_REJECTED,
-            getPermissionRejected = mainViewModel.getPermissionRejected(CAMERA_PERMISSION_REJECTED),
-            setPermissionRejected = {mainViewModel.setPermissionRejected(CAMERA_PERMISSION_REJECTED)},
-            getIsShowedPermissionDialog = mainViewModel.getIsShowedPermissionDialog(
-                CAMERA_PERMISSION_REJECTED+"show"),
-            setIsShowedPermissionDialog = {mainViewModel.setIsShowedPermissionDialog(
-                CAMERA_PERMISSION_REJECTED+"show")}
-        )
-    }
 
     private fun openCamerOrGalleryDialog(){
         val cameraOrGalleryDialog = CameraOrGalleryBottomSheet(cameraViewModel)
@@ -71,13 +61,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
     override fun initListener() {
         binding.apply {
             buttonCamera.setOnClickListener {
-                if(!mActivity.hasPermissions(CAMERA_PERMISSION_REJECTED)){
-                    mActivity.showToast("설정에서 카메라 권한을 허용해주세요")
-                    return@setOnClickListener
-                }else{
-                    //TODO 카메라 키는 로직 추가
-                    openCamerOrGalleryDialog()
-                }
+                openCamerOrGalleryDialog()
             }
         }
     }
@@ -100,11 +84,13 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
                 }
             }
 
+            //갤러리 열기
             viewLifecycleOwner.lifecycleScope.launch {
-                selectedCameraImage.collectLatest {
-                    binding.imagePhoto.setImageBitmap(it)
+                isSelectedGallery.collectLatest {
+                    galleryActivityResult.launch("image/*")
                 }
             }
+
         }
     }
 
@@ -126,7 +112,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
             currentPhotoPath = absolutePath
         }
     }
-    val cameraActivityResult =
+    private val cameraActivityResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 var bitmap: Bitmap
@@ -145,8 +131,20 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
                         Uri.fromFile(file)
                     )
                 }
-                cameraViewModel.setSelectedCameraImage(bitmap)
+                binding.imagePhoto.setImageBitmap(bitmap)
             }
+        }
+
+    //갤러리 결과 받아오기
+    private val galleryActivityResult =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            // 결과를 처리하는 코드를 작성합니다.
+            if (uri != null) {
+                Glide.with(binding.imagePhoto)
+                    .load(uri)
+                    .into(binding.imagePhoto)
+            }
+
         }
 
 }

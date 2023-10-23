@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.moneyminions.mvvmtemplate.MainActivity
 import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.CAMERA_PERMISSION_REJECTED
+import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.PERMISSION_LIST
 import java.security.Permission
 
 private const val TAG = "차선호"
@@ -21,6 +22,33 @@ fun Context.hasPermissions(permission: String): Boolean{
         this,
         permission
     ) == PackageManager.PERMISSION_GRANTED
+}
+
+fun checkAllPermission(
+    fragment: Fragment?,
+    activity: MainActivity,
+    getPermissionRejected: (String) -> Boolean,
+    setPermissionRejected: (String) -> Unit,
+    getIsShowedPermissionDialog: (String) -> Boolean,
+    setIsShowedPermissionDialog: (String) -> Unit
+){
+    val requestMultiplePermission =
+        (fragment?:activity).registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+            results.forEach {
+                Log.d(TAG, "checkAllPermission... ${it.key}")
+                if(!it.value) {
+                    if(!getPermissionRejected(it.key)){
+                        setPermissionRejected(it.key)
+                    }else{
+                        if(!getIsShowedPermissionDialog(it.key)) {
+                            setIsShowedPermissionDialog(it.key)
+                            showPermissionDialog(activity)
+                        }
+                    }
+                }
+            }
+        }
+    requestMultiplePermission.launch(PERMISSION_LIST)
 }
 
 

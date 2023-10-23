@@ -2,6 +2,7 @@ package com.moneyminions.mvvmtemplate
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -10,10 +11,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.moneyminions.mvvmtemplate.base.BaseActivity
 import com.moneyminions.mvvmtemplate.databinding.ActivityMainBinding
 import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.PERMISSION_LIST
+import com.moneyminions.mvvmtemplate.util.checkAllPermission
 import com.moneyminions.mvvmtemplate.util.checkOnePermission
 import com.moneyminions.mvvmtemplate.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+private const val TAG = "차선호"
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
@@ -31,17 +34,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     private fun requestPermission(){
-        for(permission in PERMISSION_LIST){
-            checkOnePermission(
-                fragment = null,
-                activity = this,
-                permission = permission,
-                getPermissionRejected = mainViewModel.getPermissionRejected(permission),
-                setPermissionRejected = {mainViewModel.setPermissionRejected(permission)},
-                getIsShowedPermissionDialog = mainViewModel.getIsShowedPermissionDialog(permission+"show"),
-                setIsShowedPermissionDialog = {mainViewModel.setIsShowedPermissionDialog(permission+"show")}
-            )
-        }
+        checkAllPermission(
+            fragment = null,
+            activity = this,
+            getPermissionRejected = {it -> mainViewModel.getPermissionRejected(it)},
+            setPermissionRejected = {it -> mainViewModel.setPermissionRejected(it)},
+            getIsShowedPermissionDialog = {it -> mainViewModel.getIsShowedPermissionDialog(it+"show")},
+            setIsShowedPermissionDialog = {it -> mainViewModel.setIsShowedPermissionDialog(it+"show")}
+        )
     }
 
     private fun setBottomNavigationView(){

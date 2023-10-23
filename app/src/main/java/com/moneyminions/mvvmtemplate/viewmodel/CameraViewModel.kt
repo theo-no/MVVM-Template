@@ -1,6 +1,7 @@
 package com.moneyminions.mvvmtemplate.viewmodel
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Environment
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
@@ -29,14 +30,12 @@ class CameraViewModel @Inject constructor(
         }
     }
 
-
-
-    private val _selectedCameraImage = MutableSharedFlow<Bitmap>()
-    val selectedCameraImage: SharedFlow<Bitmap>
-        get() = _selectedCameraImage.asSharedFlow()
-    fun setSelectedCameraImage(bitmap: Bitmap){
+    private val _isSelectedGallery = MutableSharedFlow<Boolean>()
+    val isSelectedGallery: SharedFlow<Boolean>
+        get() = _isSelectedGallery
+    fun setIsSelectedGallery(value: Boolean){
         viewModelScope.launch {
-            _selectedCameraImage.emit(bitmap)
+            _isSelectedGallery.emit(value)
         }
     }
 }

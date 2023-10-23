@@ -9,8 +9,12 @@ class ApplicationClass: Application() {
     // 코틀린의 전역변수
     companion object {
         const val CAMERA_PERMISSION_REJECTED = android.Manifest.permission.CAMERA
+        const val GALLERY_PERMISSION_REJECTED = android.Manifest.permission.READ_EXTERNAL_STORAGE
+        const val IMAGE_PERMISSION_REJECTED = android.Manifest.permission.READ_MEDIA_IMAGES
         val PERMISSION_LIST = arrayOf(
-            CAMERA_PERMISSION_REJECTED
+            CAMERA_PERMISSION_REJECTED,
+            GALLERY_PERMISSION_REJECTED,
+            IMAGE_PERMISSION_REJECTED
         )
     }
 

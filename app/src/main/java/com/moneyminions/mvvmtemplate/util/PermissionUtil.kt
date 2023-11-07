@@ -1,5 +1,6 @@
 package com.moneyminions.mvvmtemplate.util
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -7,6 +8,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.result.ActivityResultCaller
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -84,4 +87,39 @@ fun showPermissionDialog(activity: MainActivity) {
 
     val dialog = builder.create()
     dialog.show()
+}
+
+fun checkAllPermission2(
+    fragment: Fragment?,
+    activity: MainActivity,
+    permissionList: Array<String>,
+    getPermissionRejected: (String) -> Boolean,
+    setPermissionRejected: (String) -> Unit,
+    getIsShowedPermissionDialog: (String) -> Boolean,
+    setIsShowedPermissionDialog: (String) -> Unit,
+    isShowDialog: () -> Unit
+): ActivityResultLauncher<Array<String>> {
+    val requestMultiplePermission =
+        (fragment?:activity).registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+            var lastResult = false // 초기값을 false 설정
+            results.forEach {
+                if(!it.value) {
+                    if(!getPermissionRejected(it.key)){ //거절한 적이 없다면
+                        setPermissionRejected(it.key) //거절했다고 값 갱신
+                    }else{
+                        if(!getIsShowedPermissionDialog(it.key)) { //두 번 거절해서 다이얼로그 띄운 적 없으면
+                            setIsShowedPermissionDialog(it.key) //해당 권한에 대해서 다이얼로그 띄워야 한다고 값 갱신
+                            lastResult = true // 다이얼로그 총 한 번만 띄우기 위해 값 저장
+                        }
+                    }
+                }
+            }
+            // 다이얼로그 띄워야 한다면
+            if(lastResult){
+                //여기서 다이얼로그 띄우는 변수 갱신
+                isShowDialog()
+            }
+        }
+    return requestMultiplePermission
+//    requestMultiplePermission.launch(permissionList)
 }

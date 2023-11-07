@@ -12,18 +12,22 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide.init
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.moneyminions.mvvmtemplate.R
 import com.moneyminions.mvvmtemplate.base.BaseFragment
 import com.moneyminions.mvvmtemplate.databinding.FragmentCameraBinding
+import com.moneyminions.mvvmtemplate.di.ApplicationClass
 import com.moneyminions.mvvmtemplate.di.ApplicationClass.Companion.CAMERA_PERMISSION_REJECTED
+import com.moneyminions.mvvmtemplate.util.checkAllPermission2
 import com.moneyminions.mvvmtemplate.util.hasPermissions
 import com.moneyminions.mvvmtemplate.viewmodel.CameraViewModel
 import com.moneyminions.mvvmtemplate.viewmodel.MainViewModel
@@ -42,13 +46,41 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
 ) {
     private lateinit var currentPhotoPath: String
     private lateinit var file: File
+    private lateinit var cameraAndGalleryPermissionList: Array<String>
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val cameraViewModel: CameraViewModel by viewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
         initListener()
         initCollect()
+    }
+
+    private fun init(){
+        cameraAndGalleryPermissionList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(
+                CAMERA_PERMISSION_REJECTED,
+                ApplicationClass.IMAGE_PERMISSION_REJECTED
+            )
+        }else{
+            arrayOf(
+                CAMERA_PERMISSION_REJECTED,
+                ApplicationClass.GALLERY_PERMISSION_REJECTED
+            )
+        }
+        permissionLauncher = checkAllPermission2(
+            fragment = this,
+            activity = mActivity,
+            permissionList = cameraAndGalleryPermissionList,
+            getPermissionRejected = {it -> mainViewModel.getPermissionRejected(it)},
+            setPermissionRejected = {it -> mainViewModel.setPermissionRejected(it)},
+            getIsShowedPermissionDialog = {it -> mainViewModel.getIsShowedPermissionDialog(it+"show")},
+            setIsShowedPermissionDialog = {it -> mainViewModel.setIsShowedPermissionDialog(it+"show")},
+            isShowDialog = {if(!mainViewModel.isShowPermissionDialog.value) mainViewModel.setIsShowPermissionDialog(true)}
+        )
     }
 
 
@@ -60,10 +92,12 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
     override fun initListener() {
         binding.apply {
             buttonCamera.setOnClickListener {
+                permissionLauncher.launch(cameraAndGalleryPermissionList)
                 openCamerOrGalleryDialog()
             }
         }
     }
+
 
     private fun initCollect(){
         cameraViewModel.apply {
@@ -92,6 +126,9 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>(
 
         }
     }
+
+
+
 
     /**
      * 카메라로 찍은 사진을 사진파일로 만듭니다.

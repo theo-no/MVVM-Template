@@ -46,7 +46,7 @@ class CameraOrGalleryBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initListener()
-        checkPermission()
+//        checkPermission()
     }
 
     private fun initListener(){
